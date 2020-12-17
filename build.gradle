@@ -49,4 +49,5 @@ ext {
     retrofitVersion = '2.9.0'
     testExtJunitVersion = '1.1.1'
     prdownloaderVersion = '0.6.0'
+    RoundedImageView = '2.3.0'
 }

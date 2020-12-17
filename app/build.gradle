@@ -85,4 +85,7 @@ dependencies {
     //PRDownloader
     implementation "com.mindorks.android:prdownloader:$prdownloaderVersion"
 
+    // RoundedImageView
+    implementation "com.makeramen:roundedimageview:$RoundedImageView"
+
 }
