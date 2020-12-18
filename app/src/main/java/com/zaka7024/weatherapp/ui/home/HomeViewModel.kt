@@ -30,6 +30,7 @@ class HomeViewModel @ViewModelInject constructor(private val weatherRepository: 
             val weather = withContext(Dispatchers.Default) {
                 weatherRepository.getWeatherCity(cityName)
             }
+            if (weather != null)
             _cityWeather.value = weather
         }
     }

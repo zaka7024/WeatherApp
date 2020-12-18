@@ -10,7 +10,10 @@ data class CityWeather(
     data class WeatherCondition(
         val description: String,
         val main: String,
-    )
+        val icon: String
+    ){
+
+    }
 
     data class Temperature(
         val temp: Float,
@@ -31,5 +34,6 @@ data class CityWeather(
 
     companion object {
         fun windSpeedInHour(windSpeed: Float) = (windSpeed * 60 * 60) / 1000.0f
+        fun getWeatherIcon(iconId: String) = "https://openweathermap.org/img/wn/${iconId}@2x.png"
     }
 }
