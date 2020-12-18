@@ -1,9 +1,19 @@
 package com.zaka7024.weatherapp.ui.home
 
+import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.text.InputType
 import android.view.View
+import android.view.Window
+import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import androidx.appcompat.widget.AppCompatAutoCompleteTextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -16,13 +26,18 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
+import com.xwray.groupie.Item
+import com.xwray.groupie.OnItemClickListener
 import com.zaka7024.weatherapp.R
 import com.zaka7024.weatherapp.data.CityWeather
 import com.zaka7024.weatherapp.databinding.FragmentHomeBinding
+import com.zaka7024.weatherapp.ui.home.items.CityItem
 import com.zaka7024.weatherapp.ui.home.items.WeatherDayItem
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.drawer.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
@@ -43,8 +58,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             currentTimeText.text = getCurrentTime()
         }
 
+        binding.drawerIcon.setOnClickListener {
+            it.isVisible = false
+            openDrawer(binding)
+        }
+
         //
         setCityWeatherData(binding)
+        setCityAdapter(binding)
         setWeatherImage(binding)
         setDaysAdapter(binding)
     }
@@ -111,6 +132,39 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         })
     }
 
+    private fun openDrawer(binding: FragmentHomeBinding) {
+        binding.apply {
+            drawer_add_icon.setOnClickListener {
+                showSelectCityDialog()
+            }
+
+            drawer_close_icon.setOnClickListener {
+                val closeAnimation =
+                    AnimationUtils.loadAnimation(requireContext(), R.anim.drawer_close)
+                closeAnimation.setAnimationListener(object : Animation.AnimationListener {
+                    override fun onAnimationStart(animation: Animation?) {
+                        drawerIcon.fadeInTop()
+                    }
+
+                    override fun onAnimationEnd(animation: Animation?) {
+                        drawer.isVisible = false
+                    }
+
+                    override fun onAnimationRepeat(animation: Animation?) {
+                    }
+                })
+                drawer.startAnimation(closeAnimation)
+            }
+            drawer.isVisible = true
+            drawer.startAnimation(
+                AnimationUtils.loadAnimation(
+                    requireContext(),
+                    R.anim.drawer_open
+                )
+            )
+        }
+    }
+
     private fun View.fadeInBottom() {
         this.isVisible = true
         val fadeInBottom = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in_bottom)
@@ -119,7 +173,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun View.fadeInBottomDelayed() {
         this.isVisible = true
-        val fadeInBottom = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in_bottom_delayed)
+        val fadeInBottom =
+            AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in_bottom_delayed)
         this.startAnimation(fadeInBottom)
     }
 
@@ -164,11 +219,25 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
+    private fun setCityAdapter(binding: FragmentHomeBinding) {
+        val adapter = GroupAdapter<GroupieViewHolder>()
+        binding.apply {
+            cities_recycler.adapter = adapter
+        }
+
+        adapter.add(CityItem())
+        adapter.add(CityItem())
+        adapter.add(CityItem())
+        adapter.add(CityItem())
+        adapter.add(CityItem())
+        adapter.add(CityItem())
+    }
+
     private fun getWeatherDescription(cityWeather: CityWeather) = getString(
         R.string.weather_description,
         cityWeather.weather.first().description,
         cityWeather.wind.deg.toInt().toString(),
-        CityWeather.windSpeedInHour(cityWeather.wind.speed).toString(),
+        CityWeather.windSpeedInHour(cityWeather.wind.speed).roundToInt().toString(),
         cityWeather.main.humidity.toInt().toString()
     ) + "%"
 
@@ -179,5 +248,25 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun getCurrentTime(): String {
         return SimpleDateFormat("h:mm a").format(Calendar.getInstance().time)
+    }
+
+    private fun showSelectCityDialog() {
+        val dialog = Dialog(requireContext())
+        dialog.apply {
+            setContentView(R.layout.search_city_dialog)
+            val search = findViewById<AppCompatAutoCompleteTextView>(R.id.auto_search_view)
+            search.setAdapter(
+                ArrayAdapter(
+                    requireContext(), R.layout.auto_complete_item, R.id.auto_complete_text,
+                    resources.getStringArray(R.array.countries_array)
+                )
+            )
+
+            val window: Window = window!!
+            window.setLayout(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.WRAP_CONTENT)
+            window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+            show()
+        }
     }
 }
