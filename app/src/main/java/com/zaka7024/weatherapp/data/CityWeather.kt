@@ -8,7 +8,8 @@ data class CityWeather(
     val name: String
     ) {
     data class WeatherCondition(
-        val description: String
+        val description: String,
+        val main: String,
     )
 
     data class Temperature(
@@ -27,4 +28,8 @@ data class CityWeather(
     data class Clouds(
         val all: Float
     )
+
+    companion object {
+        fun windSpeedInHour(windSpeed: Float) = (windSpeed * 60 * 60) / 1000.0f
+    }
 }

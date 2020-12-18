@@ -10,7 +10,7 @@ class WeatherRepository @Inject constructor(private val weatherApi: WeatherApi){
 
     suspend fun getWeatherCity(city: String): CityWeather? {
         return try {
-            return weatherApi.getCityWeather(city,  WeatherApi.APP_ID)
+            return weatherApi.getCityWeather(cityName = city,  appId = WeatherApi.APP_ID)
         }
         catch (e: IOException) {
             Log.i("WeatherRepository", e.toString())

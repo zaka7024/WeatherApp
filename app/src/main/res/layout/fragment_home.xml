@@ -1,83 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment">
 
-    <com.makeramen.roundedimageview.RoundedImageView
-        android:id="@+id/image_view"
-        android:layout_width="0dp"
-        android:layout_height="400dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/weather"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:riv_corner_radius="10dp"
-        app:riv_mutate_background="true" />
-
-    <TextView
-        android:id="@+id/weather_text_view"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:fontFamily="@font/roboto_mono_thin"
-        android:text="7°C"
-        android:textColor="@color/primaryDarkColor"
-        android:textSize="48sp"
-        app:layout_constraintStart_toStartOf="@+id/image_view"
-        app:layout_constraintTop_toBottomOf="@+id/image_view" />
+        android:paddingBottom="4dp"
+        tools:context=".ui.home.HomeFragment">
 
-    <TextView
-        android:id="@+id/date_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/roboto_mono_light"
-        android:text="SUN, MARS, 23"
-        android:textColor="#9F9F9F"
-        android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="@+id/weather_text_view"
-        app:layout_constraintTop_toBottomOf="@+id/weather_text_view" />
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/weather_image"
+            android:layout_width="0dp"
+            android:layout_height="380dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/weather"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:riv_corner_radius="10dp"
+            app:riv_mutate_background="true" />
 
-    <TextView
-        android:id="@+id/city_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:fontFamily="@font/roboto_mono"
-        android:text="Amman"
-        android:textColor="@color/primaryTextColor"
-        android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="@+id/date_text"
-        app:layout_constraintTop_toBottomOf="@+id/date_text" />
+        <TextView
+            android:id="@+id/weather_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/roboto_mono_thin"
+            tools:text="7°C"
+            android:textColor="@color/primaryDarkColor"
+            android:textSize="48sp"
+            app:layout_constraintStart_toStartOf="@+id/weather_image"
+            app:layout_constraintTop_toBottomOf="@+id/weather_image" />
 
-    <TextView
-        android:id="@+id/weather_state_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/roboto_mono"
-        android:text="Cloudy"
-        android:textColor="@color/primaryTextColor"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="@+id/city_name"
-        app:layout_constraintTop_toBottomOf="@+id/city_name" />
+        <TextView
+            android:id="@+id/date_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_mono_light"
+            android:text="SUN, MARS, 23"
+            android:textColor="#9F9F9F"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@+id/weather_text"
+            app:layout_constraintTop_toBottomOf="@+id/weather_text" />
 
-    <TextView
-        android:id="@+id/weather_description"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:ellipsize="end"
-        android:fontFamily="@font/roboto_mono_light"
-        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation."
-        android:textColor="@color/primaryDarkColor"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/weather_state_text"
-        app:layout_constraintTop_toBottomOf="@+id/weather_state_text" />
+        <TextView
+            android:id="@+id/city_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/roboto_mono"
+            tools:text="Amman"
+            android:textColor="@color/primaryTextColor"
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="@+id/date_text"
+            app:layout_constraintTop_toBottomOf="@+id/date_text" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/weather_state_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_mono"
+            tools:text="Cloudy"
+            android:textColor="@color/primaryTextColor"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/city_name"
+            app:layout_constraintTop_toBottomOf="@+id/city_name" />
+
+        <TextView
+            android:id="@+id/weather_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/roboto_mono_light"
+            tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation."
+            android:textColor="@color/primaryDarkColor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/weather_state_text"
+            app:layout_constraintTop_toBottomOf="@+id/weather_state_text" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
