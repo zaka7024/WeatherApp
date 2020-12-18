@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:padding="8dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/day_weather_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_mono_light"
+        android:text="7°C"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/day_humidity_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_mono_light"
+        android:text="68%"
+        android:textColor="#2196F3"
+        android:textSize="12sp" />
+
+    <ImageView
+        android:id="@+id/day_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/weather_icon" />
+
+    <TextView
+        android:id="@+id/day_time_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_mono_light"
+        android:text="5 pm"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="12sp" />
+
+</LinearLayout>

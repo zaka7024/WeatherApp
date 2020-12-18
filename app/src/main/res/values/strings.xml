@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">WeatherApp</string>
     <string name="temp_c">%1$d°C</string>
-    <string name="weather_description">Today - Mostly %1$s, Wind %2$s degree at %3$skm/h. Humidity, %4$s.</string>
+    <string name="weather_description">Today - Mostly %1$s, Wind %2$s degree at %3$skm/h. Humidity, %4$s</string>
 </resources>

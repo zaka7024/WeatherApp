@@ -16,17 +16,17 @@
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/weather_image"
             android:layout_width="0dp"
-            android:layout_height="380dp"
+            android:layout_height="360dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/weather"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/current_time_text"
             app:riv_corner_radius="10dp"
-            app:riv_mutate_background="true" />
+            app:riv_mutate_background="true"
+            tools:src="@drawable/snow" />
 
         <TextView
             android:id="@+id/weather_text"
@@ -45,7 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/roboto_mono_light"
-            android:text="SUN, MARS, 23"
+            tools:text="SUN, MARS, 23"
             android:textColor="#9F9F9F"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="@+id/weather_text"
@@ -86,6 +86,41 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/weather_state_text"
             app:layout_constraintTop_toBottomOf="@+id/weather_state_text" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/days_weather_recycler"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/weather_description"
+            tools:listitem="@layout/day_weather_item" />
+
+        <TextView
+            android:id="@+id/current_time_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/roboto_mono_light"
+            android:text="2:49 PM"
+            android:textColor="@color/primaryTextColor"
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:scaleX="-1"
+            app:tint="@color/primaryTextColor"
+            android:src="@drawable/ic_baseline_notes_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

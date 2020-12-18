@@ -50,4 +50,6 @@ ext {
     testExtJunitVersion = '1.1.1'
     prdownloaderVersion = '0.6.0'
     RoundedImageView = '2.3.0'
+    lifecycle_version = "2.1.0"
+    groupie_version = "2.8.1"
 }
