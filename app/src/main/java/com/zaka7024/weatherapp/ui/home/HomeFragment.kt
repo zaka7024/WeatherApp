@@ -29,12 +29,14 @@ import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import com.xwray.groupie.OnItemClickListener
 import com.zaka7024.weatherapp.R
+import com.zaka7024.weatherapp.data.City
 import com.zaka7024.weatherapp.data.CityWeather
 import com.zaka7024.weatherapp.databinding.FragmentHomeBinding
 import com.zaka7024.weatherapp.ui.home.items.CityItem
 import com.zaka7024.weatherapp.ui.home.items.WeatherDayItem
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.drawer.*
+import kotlinx.android.synthetic.main.search_city_dialog.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
@@ -53,21 +55,23 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         // For test
         homeViewModel.getWeatherCity("Amman")
 
-        // Set current time
-        binding.apply {
-            currentTimeText.text = getCurrentTime()
-        }
-
         binding.drawerIcon.setOnClickListener {
             it.isVisible = false
             openDrawer(binding)
         }
 
         //
+        setCurrentTime(binding)
         setCityWeatherData(binding)
         setCityAdapter(binding)
         setWeatherImage(binding)
         setDaysAdapter(binding)
+    }
+
+    private fun setCurrentTime(binding: FragmentHomeBinding) {
+        binding.apply {
+            currentTimeText.text = getCurrentTime()
+        }
     }
 
     private fun setCityWeatherData(binding: FragmentHomeBinding) {
@@ -225,12 +229,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             cities_recycler.adapter = adapter
         }
 
-        adapter.add(CityItem())
-        adapter.add(CityItem())
-        adapter.add(CityItem())
-        adapter.add(CityItem())
-        adapter.add(CityItem())
-        adapter.add(CityItem())
+        homeViewModel.userCities.observe(viewLifecycleOwner, {
+            adapter.clear()
+            it.forEach { city ->
+                adapter.add(CityItem())
+            }
+        })
     }
 
     private fun getWeatherDescription(cityWeather: CityWeather) = getString(
@@ -255,16 +259,30 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         dialog.apply {
             setContentView(R.layout.search_city_dialog)
             val search = findViewById<AppCompatAutoCompleteTextView>(R.id.auto_search_view)
+            val countryList = resources.getStringArray(R.array.countries_array)
             search.setAdapter(
                 ArrayAdapter(
                     requireContext(), R.layout.auto_complete_item, R.id.auto_complete_text,
-                    resources.getStringArray(R.array.countries_array)
+                    countryList
                 )
             )
 
             val window: Window = window!!
-            window.setLayout(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.WRAP_CONTENT)
+            window.setLayout(
+                ConstraintLayout.LayoutParams.MATCH_PARENT,
+                ConstraintLayout.LayoutParams.WRAP_CONTENT
+            )
             window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+            // Try select the country
+            add_country.setOnClickListener {
+                val selectedText = search.text.toString()
+                if (countryList.contains(selectedText.trim())) {
+                    // Save the selected item to cities table
+                    homeViewModel.saveUserCity(City(cityName = selectedText))
+                    dismiss()
+                }
+            }
 
             show()
         }
