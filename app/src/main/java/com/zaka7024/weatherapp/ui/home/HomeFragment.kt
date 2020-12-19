@@ -5,12 +5,11 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.text.InputType
+import android.util.Log
 import android.view.View
 import android.view.Window
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -26,26 +25,26 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
-import com.xwray.groupie.Item
-import com.xwray.groupie.OnItemClickListener
 import com.zaka7024.weatherapp.R
 import com.zaka7024.weatherapp.data.City
 import com.zaka7024.weatherapp.data.CityWeather
+import com.zaka7024.weatherapp.data.WeatherRepository
 import com.zaka7024.weatherapp.databinding.FragmentHomeBinding
 import com.zaka7024.weatherapp.ui.home.items.CityItem
 import com.zaka7024.weatherapp.ui.home.items.WeatherDayItem
+import com.zaka7024.weatherapp.utils.SettingsManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.drawer.*
 import kotlinx.android.synthetic.main.search_city_dialog.*
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private val homeViewModel by viewModels<HomeViewModel>()
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -230,9 +229,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
 
         homeViewModel.userCities.observe(viewLifecycleOwner, {
+            homeViewModel.updateCitiesWeather()
             adapter.clear()
             it.forEach { city ->
-                adapter.add(CityItem())
+                adapter.add(CityItem(city, requireContext(), action = homeViewModel::selectMainCity))
             }
         })
     }
@@ -277,7 +277,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             // Try select the country
             add_country.setOnClickListener {
                 val selectedText = search.text.toString()
-                if (countryList.contains(selectedText.trim())) {
+                if (countryList.contains(selectedText)) {
                     // Save the selected item to cities table
                     homeViewModel.saveUserCity(City(cityName = selectedText))
                     dismiss()

@@ -132,16 +132,16 @@
 
             <ImageView
                 android:id="@+id/drawer_icon"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginTop="8dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:layout_marginEnd="16dp"
+                android:layout_marginBottom="2dp"
                 android:scaleX="-1"
-
-                android:src="@drawable/ic_baseline_notes_24"
+                android:src="@drawable/list"
                 android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="@+id/current_time_text"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/current_time_text"
                 app:tint="@color/primaryTextColor"
                 tools:visibility="visible" />
 

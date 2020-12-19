@@ -1,5 +1,8 @@
 package com.zaka7024.weatherapp.data
 
+import com.zaka7024.weatherapp.R
+import java.util.*
+
 data class CityWeather(
     val weather: List<WeatherCondition>,
     val main: Temperature,
@@ -35,5 +38,17 @@ data class CityWeather(
     companion object {
         fun windSpeedInHour(windSpeed: Float) = (windSpeed * 60 * 60) / 1000.0f
         fun getWeatherIcon(iconId: String) = "https://openweathermap.org/img/wn/${iconId}@2x.png"
+        fun getWeatherImage(weatherCondition: String): Int {
+            return when (weatherCondition.toLowerCase(Locale.ENGLISH)) {
+                "thunderstorm" -> R.drawable.thunderstorm
+                "drizzle" -> R.drawable.drizzle
+                "rain" -> R.drawable.rain
+                "haze" -> R.drawable.haze
+                "snow" -> R.drawable.snow
+                "clear" -> R.drawable.weather_sunny
+                "clouds" -> R.drawable.cloudy
+                else -> R.drawable.weather_sunny
+            }
+        }
     }
 }

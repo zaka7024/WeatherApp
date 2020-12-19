@@ -1,7 +1,6 @@
 package com.zaka7024.weatherapp.data
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import com.zaka7024.weatherapp.api.WeatherApi
 import retrofit2.HttpException
 import java.io.IOException
@@ -28,5 +27,9 @@ class WeatherRepository @Inject constructor(
 
     suspend fun saveCity(city: City) {
         cityDao.insert(city)
+    }
+
+    suspend fun updateCity(city: City) {
+        cityDao.update(city)
     }
 }

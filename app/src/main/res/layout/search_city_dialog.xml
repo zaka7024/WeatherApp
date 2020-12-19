@@ -17,6 +17,7 @@
         android:background="@drawable/rounded"
         android:backgroundTint="#DDD"
         android:completionThreshold="1"
+        android:fontFamily="@font/roboto_mono_light"
         android:hint="Select City"
         android:paddingStart="4dp"
         android:paddingEnd="4dp"

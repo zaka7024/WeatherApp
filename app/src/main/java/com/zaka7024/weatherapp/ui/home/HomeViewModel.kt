@@ -1,16 +1,14 @@
 package com.zaka7024.weatherapp.ui.home
 
+import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import com.zaka7024.weatherapp.R
 import com.zaka7024.weatherapp.data.City
-import com.zaka7024.weatherapp.data.CityDao
 import com.zaka7024.weatherapp.data.CityWeather
 import com.zaka7024.weatherapp.data.WeatherRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.util.*
+import com.zaka7024.weatherapp.utils.SettingsManager
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.*
 
 class HomeViewModel @ViewModelInject constructor(
     private val weatherRepository: WeatherRepository
@@ -25,16 +23,23 @@ class HomeViewModel @ViewModelInject constructor(
     val userCities: LiveData<List<City>>
         get() = _userCities
 
+
+    private var updated = false
+
     private val _weatherImage = _cityWeather.switchMap {
-        MutableLiveData(getWeatherImage(it))
+        MutableLiveData(CityWeather.getWeatherImage(it.weather.first().main))
     }
 
     val weatherImage: LiveData<Int>
         get() = _weatherImage
 
+    init {
+        //updateCitiesWeather()
+    }
+
     fun getWeatherCity(cityName: String) {
         viewModelScope.launch {
-            val weather = withContext(Dispatchers.Default) {
+            val weather = withContext(Dispatchers.IO) {
                 weatherRepository.getWeatherCity(cityName)
             }
             if (weather != null)
@@ -45,21 +50,47 @@ class HomeViewModel @ViewModelInject constructor(
     fun saveUserCity(city: City) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                weatherRepository.saveCity(city)
+                val cityWeather = weatherRepository.getWeatherCity(city.cityName)
+                if (cityWeather != null) {
+                    val newCity = City(
+                        city.cityName,
+                        cityWeather.main.temp.toInt(),
+                        cityWeather.weather.first().main,
+                        cityWeather.weather.first().icon
+                    )
+                    weatherRepository.saveCity(newCity)
+                }
             }
         }
     }
 
-    private fun getWeatherImage(cityWeather: CityWeather): Int {
-        return when (cityWeather.weather.first().main.toLowerCase(Locale.ENGLISH)) {
-            "thunderstorm" -> R.drawable.thunderstorm
-            "drizzle" -> R.drawable.drizzle
-            "rain" -> R.drawable.rain
-            "haze" -> R.drawable.haze
-            "snow" -> R.drawable.snow
-            "clear" -> R.drawable.weather_sunny
-            "clouds" -> R.drawable.cloudy
-            else -> R.drawable.weather_sunny
+    fun selectMainCity(cityName: String) {
+        getWeatherCity(cityName)
+    }
+
+    fun updateCitiesWeather() {
+        if (updated) return
+        updated = true
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                if (_userCities.value != null) {
+                    for (city in _userCities.value!!) {
+                        val cityWeather =
+                            withContext(Dispatchers.IO) {
+                                weatherRepository.getWeatherCity(city.cityName)
+                            }
+                        if (cityWeather != null) {
+                            val newCity = City(
+                                city.cityName,
+                                cityWeather.main.temp.toInt(),
+                                cityWeather.weather.first().main,
+                                cityWeather.weather.first().icon
+                            )
+                            weatherRepository.updateCity(newCity)
+                        }
+                    }
+                }
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import com.zaka7024.weatherapp.api.WeatherApi
 import com.zaka7024.weatherapp.data.CitiesDatabase
 import com.zaka7024.weatherapp.data.CityDao
+import com.zaka7024.weatherapp.data.WeatherRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -42,5 +43,11 @@ class AppModule {
     @Singleton
     fun provideCityDao(citiesDatabase: CitiesDatabase): CityDao {
         return citiesDatabase.daysDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideWeatherRepository(weatherApi: WeatherApi, cityDao: CityDao): WeatherRepository {
+        return WeatherRepository(weatherApi, cityDao)
     }
 }
