@@ -95,9 +95,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             if (cityWeather != null) {
                 binding.apply {
 
-                    // Hide loading icon
-                    loadingImageView.isVisible = false
-
                     val weather = cityWeather.weather.first()
 
                     weatherText.text = getString(R.string.temp_c, cityWeather.main.temp.toInt())
@@ -131,6 +128,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                 dataSource: DataSource?,
                                 isFirstResource: Boolean
                             ): Boolean {
+
+                                // Hide loading icon
+                                loadingImageView.isVisible = false
 
                                 // Show all views
                                 currentTimeText.fadeInTop()
