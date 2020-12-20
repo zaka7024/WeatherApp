@@ -1,19 +1,20 @@
 package com.zaka7024.weatherapp.ui.home
 
-import android.util.Log
+import android.app.Application
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.zaka7024.weatherapp.data.City
 import com.zaka7024.weatherapp.data.CityWeather
 import com.zaka7024.weatherapp.data.WeatherRepository
+import com.zaka7024.weatherapp.ui.home.items.OnCiteItemClickOptionsListener
 import com.zaka7024.weatherapp.utils.SettingsManager
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
 
 class HomeViewModel @ViewModelInject constructor(
-    private val weatherRepository: WeatherRepository
+    private val weatherRepository: WeatherRepository,
+    application: Application
 ) :
-    ViewModel() {
+    AndroidViewModel(application) , OnCiteItemClickOptionsListener {
 
     private val _cityWeather = MutableLiveData<CityWeather>()
     val cityWeather: LiveData<CityWeather>
@@ -34,7 +35,8 @@ class HomeViewModel @ViewModelInject constructor(
         get() = _weatherImage
 
     init {
-        //updateCitiesWeather()
+        val defaultCity = SettingsManager.getDefaultCity(application)
+        getWeatherCity(defaultCity?: "Amman")
     }
 
     fun getWeatherCity(cityName: String) {
@@ -66,6 +68,16 @@ class HomeViewModel @ViewModelInject constructor(
 
     fun selectMainCity(cityName: String) {
         getWeatherCity(cityName)
+        // Change the default city
+        SettingsManager.setDefaultCity(getApplication(), cityName)
+    }
+
+    private fun deleteCity(city: City) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                weatherRepository.deleteCity(city)
+            }
+        }
     }
 
     fun updateCitiesWeather() {
@@ -92,5 +104,9 @@ class HomeViewModel @ViewModelInject constructor(
                 }
             }
         }
+    }
+
+    override fun onDeleteOption(city: City) {
+        deleteCity(city)
     }
 }

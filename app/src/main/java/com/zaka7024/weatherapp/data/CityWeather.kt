@@ -45,6 +45,7 @@ data class CityWeather(
                 "rain" -> R.drawable.rain
                 "haze" -> R.drawable.haze
                 "snow" -> R.drawable.snow
+                "smoke" -> R.drawable.smoke
                 "clear" -> R.drawable.weather_sunny
                 "clouds" -> R.drawable.cloudy
                 else -> R.drawable.weather_sunny

@@ -51,9 +51,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         val binding = FragmentHomeBinding.bind(view)
 
-        // For test
-        homeViewModel.getWeatherCity("Amman")
-
         binding.drawerIcon.setOnClickListener {
             it.isVisible = false
             openDrawer(binding)
@@ -232,7 +229,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             homeViewModel.updateCitiesWeather()
             adapter.clear()
             it.forEach { city ->
-                adapter.add(CityItem(city, requireContext(), action = homeViewModel::selectMainCity))
+                adapter.add(CityItem(city, requireContext(), action = homeViewModel::selectMainCity, homeViewModel))
             }
         })
     }

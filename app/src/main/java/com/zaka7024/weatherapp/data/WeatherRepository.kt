@@ -32,4 +32,8 @@ class WeatherRepository @Inject constructor(
     suspend fun updateCity(city: City) {
         cityDao.update(city)
     }
+
+    suspend fun deleteCity(city: City) {
+        cityDao.delete(city)
+    }
 }
