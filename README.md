@@ -1,4 +1,4 @@
-# ImageSearchApp
+# WeatherApp
 Weather app using openweathermap.org free Api
 
 # Libraries And Tools
