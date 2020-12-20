@@ -7,6 +7,17 @@
     android:layout_height="match_parent"
     android:background="@color/backgroundsColor">
 
+    <ImageView
+        android:id="@+id/loading_image_view"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center"
+        android:alpha="0"
+        android:visibility="visible"
+        app:srcCompat="@drawable/weather_icon"
+        tools:alpha="1"
+        tools:visibility="visible" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -36,7 +36,7 @@ class HomeViewModel @ViewModelInject constructor(
 
     init {
         val defaultCity = SettingsManager.getDefaultCity(application)
-        getWeatherCity(defaultCity?: "Amman")
+        getWeatherCity(defaultCity?: "London")
     }
 
     fun getWeatherCity(cityName: String) {

@@ -49,6 +49,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         val binding = FragmentHomeBinding.bind(view)
 
+        // Load animation
+        binding.loadingImageView.animate().alpha(1f).rotationY(720f).duration = 4000L
+
         // Set app mode icon
         val appMode = SettingsManager.getAppMode(requireContext())
         if(appMode == SettingsManager.Companion.AppMode.LightMode) {
@@ -73,7 +76,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             }
         }
 
-        //
+        // Getting and showing the data
         setCurrentTime(binding)
         setCityWeatherData(binding)
         setCityAdapter(binding)
@@ -91,6 +94,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         homeViewModel.cityWeather.observe(viewLifecycleOwner, { cityWeather ->
             if (cityWeather != null) {
                 binding.apply {
+
+                    // Hide loading icon
+                    loadingImageView.isVisible = false
 
                     val weather = cityWeather.weather.first()
 

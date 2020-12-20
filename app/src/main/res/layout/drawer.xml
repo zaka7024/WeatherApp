@@ -7,7 +7,7 @@
     android:layout_width="250dp"
     android:layout_height="match_parent"
     android:layout_gravity="end"
-    android:background="@drawable/drawr_bg"
+    android:background="@drawable/drawer_bg"
     android:orientation="vertical"
     android:visibility="invisible"
     tools:visibility="visible">
@@ -41,17 +41,18 @@
 
     <LinearLayout
         android:id="@+id/no_cities_hint"
-        android:layout_weight="0.5"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
             android:layout_gravity="center"
             android:fontFamily="@font/roboto_mono_light"
-            android:textColor="@color/primaryTextColor"
-            android:text="Add your favorite country to track its weather" />
+            android:text="Add your favorite country to track its weather"
+            android:textAlignment="center"
+            android:textColor="@color/primaryTextColor" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
