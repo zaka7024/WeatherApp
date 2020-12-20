@@ -5,14 +5,16 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.Window
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -28,17 +30,13 @@ import com.xwray.groupie.GroupieViewHolder
 import com.zaka7024.weatherapp.R
 import com.zaka7024.weatherapp.data.City
 import com.zaka7024.weatherapp.data.CityWeather
-import com.zaka7024.weatherapp.data.WeatherRepository
 import com.zaka7024.weatherapp.databinding.FragmentHomeBinding
 import com.zaka7024.weatherapp.ui.home.items.CityItem
 import com.zaka7024.weatherapp.ui.home.items.WeatherDayItem
 import com.zaka7024.weatherapp.utils.SettingsManager
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.drawer.*
-import kotlinx.android.synthetic.main.search_city_dialog.*
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.inject.Inject
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
@@ -51,9 +49,28 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         val binding = FragmentHomeBinding.bind(view)
 
+        // Set app mode icon
+        val appMode = SettingsManager.getAppMode(requireContext())
+        if(appMode == SettingsManager.Companion.AppMode.LightMode) {
+            binding.appModeIcon.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_nights_stay_24))
+        }else {
+            binding.appModeIcon.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_wb_sunny_24))
+        }
+
         binding.drawerIcon.setOnClickListener {
             it.isVisible = false
+            binding.appModeIcon.isVisible = false
             openDrawer(binding)
+        }
+
+        binding.appModeIcon.setOnClickListener {icon ->
+            if(appMode == SettingsManager.Companion.AppMode.NightMode) {
+                binding.appModeIcon.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_nights_stay_24))
+                SettingsManager.setAppMode(requireContext(), SettingsManager.Companion.AppMode.LightMode)
+            }else {
+                binding.appModeIcon.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_wb_sunny_24))
+                SettingsManager.setAppMode(requireContext(), SettingsManager.Companion.AppMode.NightMode)
+            }
         }
 
         //
@@ -109,8 +126,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                 isFirstResource: Boolean
                             ): Boolean {
 
+                                // Show all views
                                 currentTimeText.fadeInTop()
                                 drawerIcon.fadeInTop()
+                                appModeIcon.fadeInTop()
 
                                 weatherImage.fadeInBottom()
                                 weatherText.fadeInBottom()
@@ -134,35 +153,40 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun openDrawer(binding: FragmentHomeBinding) {
         binding.apply {
-            drawer_add_icon.setOnClickListener {
+            appDrawer.drawerAddIcon.setOnClickListener {
                 showSelectCityDialog()
             }
 
-            drawer_close_icon.setOnClickListener {
-                val closeAnimation =
-                    AnimationUtils.loadAnimation(requireContext(), R.anim.drawer_close)
-                closeAnimation.setAnimationListener(object : Animation.AnimationListener {
-                    override fun onAnimationStart(animation: Animation?) {
-                        drawerIcon.fadeInTop()
-                    }
-
-                    override fun onAnimationEnd(animation: Animation?) {
-                        drawer.isVisible = false
-                    }
-
-                    override fun onAnimationRepeat(animation: Animation?) {
-                    }
-                })
-                drawer.startAnimation(closeAnimation)
+            appDrawer.drawerCloseIcon.setOnClickListener {
+                closeTheDrawer(binding)
             }
-            drawer.isVisible = true
-            drawer.startAnimation(
+            appDrawer.drawer.isVisible = true
+            appDrawer.drawer.startAnimation(
                 AnimationUtils.loadAnimation(
                     requireContext(),
                     R.anim.drawer_open
                 )
             )
         }
+    }
+
+    private fun closeTheDrawer(binding: FragmentHomeBinding) {
+        val closeAnimation =
+            AnimationUtils.loadAnimation(requireContext(), R.anim.drawer_close)
+        closeAnimation.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation?) {
+                binding.drawerIcon.fadeInTop()
+                binding.appModeIcon.fadeInTop()
+            }
+
+            override fun onAnimationEnd(animation: Animation?) {
+                binding.appDrawer.drawer.isVisible = false
+            }
+
+            override fun onAnimationRepeat(animation: Animation?) {
+            }
+        })
+        binding.appDrawer.drawer.startAnimation(closeAnimation)
     }
 
     private fun View.fadeInBottom() {
@@ -222,14 +246,22 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private fun setCityAdapter(binding: FragmentHomeBinding) {
         val adapter = GroupAdapter<GroupieViewHolder>()
         binding.apply {
-            cities_recycler.adapter = adapter
+            binding.appDrawer.citiesRecycler.adapter = adapter
         }
 
         homeViewModel.userCities.observe(viewLifecycleOwner, {
             homeViewModel.updateCitiesWeather()
             adapter.clear()
-            it.forEach { city ->
-                adapter.add(CityItem(city, requireContext(), action = homeViewModel::selectMainCity, homeViewModel))
+            if(it.isEmpty()) {
+                binding.appDrawer.noCitiesHint.isVisible = true
+            }else {
+                binding.appDrawer.noCitiesHint.isVisible = false
+                it.forEach { city ->
+                    adapter.add(CityItem(city, requireContext(), action = {cityName ->
+                        homeViewModel.selectMainCity(cityName)
+                        closeTheDrawer(binding)
+                    }, homeViewModel))
+                }
             }
         })
     }
@@ -272,7 +304,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
             // Try select the country
-            add_country.setOnClickListener {
+            val addCountryButton = findViewById<Button>(R.id.add_country)
+            addCountryButton.setOnClickListener {
                 val selectedText = search.text.toString()
                 if (countryList.contains(selectedText)) {
                     // Save the selected item to cities table

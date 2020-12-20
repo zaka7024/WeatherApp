@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/backgroundsColor">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -170,14 +171,28 @@
                 tools:text="7°C / 3°C"
                 tools:visibility="visible" />
 
+            <ImageView
+                android:id="@+id/app_mode_icon"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/ic_baseline_nights_stay_24"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="@+id/drawer_icon"
+                app:layout_constraintEnd_toStartOf="@+id/drawer_icon"
+                app:layout_constraintTop_toTopOf="@+id/drawer_icon"
+                app:tint="@color/primaryTextColor"
+                tools:visibility="visible" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
 
     <include
+        android:id="@+id/appDrawer"
         layout="@layout/drawer"
-        tools:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="parent" />
+        app:layout_constraintBottom_toTopOf="parent"
+        tools:visibility="invisible" />
 
 </FrameLayout>
 
